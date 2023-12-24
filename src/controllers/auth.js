@@ -10,15 +10,16 @@ const login = async (req, res) => {
   try {
     const { email, password: unhasedPassword } = req.body
 
-    const {password, ...user} = await userService.getUserByEmail(email)
+    const user = await userService.getUserByEmail(email)
     if (!user) throw new AuthError('User not found')
 
-    const isPasswordCorrect = await comparePassword(unhasedPassword, password)
+    const isPasswordCorrect = await comparePassword(unhasedPassword, user.password)
     if (!isPasswordCorrect) throw new AuthError('Wrong password')
 
     const token = await generateToken({ id: user._id })
 
-    return successResponse({ res, result: { user, token } })
+    const { password, ...userWithoutPassword } = user
+    return successResponse({ res, result: { user: userWithoutPassword, token } })
   } catch (error) {
     return errorResponse({ error, res })
   }
