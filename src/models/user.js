@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
   },
   phone_number: {
     type: String,
-    unique: true
   },
   employment_type: {
     type: String,

@@ -7,7 +7,6 @@ class UserService {
 
   async #getUserBy(query, options) {
     const { lean = true, populate, select, sort } = options || {}
-
     return await this.userRepository.findOne({ query, lean, populate, select, sort })
   }
 
