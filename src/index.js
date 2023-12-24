@@ -14,7 +14,7 @@ mongodb.once('open', () => {
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-// app.use('/api', require('./routes'))
+app.use('/api', require('./routes'))
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' })
 })
