@@ -27,8 +27,6 @@ const postAttendance = async (req, res) => {
       attendanceService.countTodayAttendancesByUserId(user_id, type)
     ])
 
-    console.log(countAttendance)
-
     if (countAttendance > 0) {
       const error = new Error(`You have already checked ${type} today`)
       error.statusCode = 400
