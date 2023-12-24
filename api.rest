@@ -1,0 +1,39 @@
+GET http://api.portfolio.host
+
+### Get authenticated user
+GET http://api.portfolio.host/api/auth
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODgyODNlMzExZTI5NTdhZGQ2MTkxNCIsImlhdCI6MTcwMzQyMjMyOCwiZXhwIjoxNzAzNTA4NzI4fQ.ReuyGG6Dw2jR2AHTsAISXFS2bQudMxfCkRY5gO-3n9fFOYBtYhGaaKShVc8fmH2dRBkLGeYZYPrZEJEJEzeueg
+
+### Register
+POST http://api.portfolio.host/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "asami.mayuri1@gmail.com",
+  "password": "password",
+  "name": "Mayuri Asami",
+  "employment_type": "Full-time",
+  "employee_id": "123456"
+}
+
+### Login
+POST http://api.portfolio.host/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "asami.mayuri1@gmail.com",
+  "password": "password"
+}
+
+### Get My Attendances
+GET http://api.portfolio.host/api/attendances
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODgyODNlMzExZTI5NTdhZGQ2MTkxNCIsImlhdCI6MTcwMzQyMjMyOCwiZXhwIjoxNzAzNTA4NzI4fQ.ReuyGG6Dw2jR2AHTsAISXFS2bQudMxfCkRY5gO-3n9fFOYBtYhGaaKShVc8fmH2dRBkLGeYZYPrZEJEJEzeueg
+
+### Clock In / Clock Out
+POST http://api.portfolio.host/api/attendances/clock-in
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODgyODNlMzExZTI5NTdhZGQ2MTkxNCIsImlhdCI6MTcwMzQyMjMyOCwiZXhwIjoxNzAzNTA4NzI4fQ.ReuyGG6Dw2jR2AHTsAISXFS2bQudMxfCkRY5gO-3n9fFOYBtYhGaaKShVc8fmH2dRBkLGeYZYPrZEJEJEzeueg
+Content-Type: application/json
+
+{
+  "ip_address": "180.253.74.175"
+}
