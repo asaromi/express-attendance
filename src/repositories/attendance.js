@@ -5,8 +5,8 @@ class AttendanceRepository {
     this.attendance = Attendance
   }
 
-  async storeData(data) {
-    return await this.attendance.create(data)
+  async createOrUpdate({ query, data }) {
+    return await this.attendance.findOneAndUpdate(query, data, { upsert: true, new: true })
   }
 
   async find({ query, lean, populate, select, sort }) {
