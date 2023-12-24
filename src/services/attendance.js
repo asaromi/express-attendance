@@ -11,10 +11,18 @@ class AttendanceService {
     return await this.attendanceRepository.storeData(data)
   }
 
-  async getAttendancesByUserId(userId) {
-    if (!userId) throw Error('userId is required')
+  async getAttendancesByUserId(user_id, options) {
+    if (!user_id) throw Error('user_id is required')
 
-    return await this.attendanceRepository.find({ userId })
+    const { sort, lean, populate, select } = options || {}
+    return await this.attendanceRepository.find({ query: { user_id }, sort, lean, populate, select })
+  }
+
+  async countTodayAttendancesByUserId(user_id, type = 'in') {
+    if (!user_id) throw Error('user_id is required')
+    const date = new Date().toISOString().slice(0,10)
+
+    return await this.attendanceRepository.countDocuments({ query: { user_id, date, type } })
   }
 }
 

@@ -12,6 +12,10 @@ class AttendanceRepository {
   async find({ query, lean, populate, select, sort }) {
     return await this.attendance.find(query).lean(lean).populate(populate).select(select).sort(sort)
   }
+
+  async countDocuments({ query }) {
+    return await this.attendance.countDocuments(query)
+  }
 }
 
 module.exports = AttendanceRepository
