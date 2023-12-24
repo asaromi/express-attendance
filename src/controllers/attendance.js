@@ -7,7 +7,7 @@ const attendanceService = new AttendanceService()
 const getMyAttendances = async (req, res) => {
   try {
     const { _id: user_id } = req.user
-    const attendances = await attendanceService.getAttendancesByUserId(user_id)
+    const attendances = await attendanceService.getAttendancesByUserId(user_id, { sort: { createdAt: -1 } })
 
     return successResponse({ res, result: attendances })
   } catch (error) {
@@ -22,7 +22,20 @@ const postAttendance = async (req, res) => {
 
     if (!ip_address) return errorResponse({ res, message: 'IP address is required', statusCode: 400 })
 
-    const location = await getLocation(ip_address)
+    const [location, countAttendance] = await Promise.all([
+      getLocation(ip_address),
+      attendanceService.countTodayAttendancesByUserId(user_id, type)
+    ])
+
+    console.log(countAttendance)
+
+    if (countAttendance > 0) {
+      const error = new Error(`You have already checked ${type} today`)
+      error.statusCode = 400
+
+      throw error
+    }
+
     const attendance = await attendanceService.storeAttendance({
       date: new Date().toISOString().slice(0, 10),
       type,
