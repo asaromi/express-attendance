@@ -2,14 +2,15 @@ const { comparePassword, hashPassword} = require('../libs/bcrypt')
 const { errorResponse, successResponse } = require('../libs/response')
 const { AuthError } = require('../libs/exceptions')
 const { generateToken, verifyToken } = require('../libs/jwt')
+const UserService = require('../services/user')
 
-const User = require('../models/user')
+const userService = new UserService()
 
 const login = async (req, res) => {
   try {
     const { email, password: unhasedPassword } = req.body
 
-    const {password, ...user} = await User.findOne({ email }).select('+password').lean()
+    const {password, ...user} = await userService.getUserByEmail(email)
     if (!user) throw new AuthError('User not found')
 
     const isPasswordCorrect = await comparePassword(unhasedPassword, password)
@@ -28,7 +29,7 @@ const register = async (req, res) => {
     const { email, password: unhashedPass, name, employee_id, employment_type, phone_number } = req.body
 
     const password = await hashPassword(unhashedPass)
-    const user = await User.create({
+    const user = await userService.storeUser({
       email,
       password,
       name,
@@ -54,7 +55,7 @@ const authenticate = async (req, res, next) => {
     const token = authorization.split(' ')[1]
     const {id} = await verifyToken(token)
 
-    const user = await User.findById(id)
+    const user = await userService.getUserById(id)
     if (!user) throw new AuthError('User not found')
 
     req.user = user
