@@ -9,6 +9,8 @@ class AttendanceService {
     if (data?.constructor !== Object) throw Error('data must be an object')
 
     const { type, ip_address, location, ...payload } = data
+
+    console.log('date before store attendance', data.date)
     if (type === 'in') {
       payload.time_in = { ip_address, location, timestamp: new Date() }
     } else if (type === 'out') {
@@ -30,7 +32,7 @@ class AttendanceService {
 
   async countTodayAttendancesByUserId(user_id, type = 'in') {
     if (!user_id) throw Error('user_id is required')
-    const date = new Date().toISOString().slice(0,10)
+    const date = this.todayDate()
     const time = type === 'in' ? 'time_in' : 'time_out'
 
     return await this.attendanceRepository.countDocuments({
@@ -40,6 +42,19 @@ class AttendanceService {
         [time]: { $ne: null }
       }
     })
+  }
+
+  todayDate(timezoneOffset = "+0700") {
+    const date = new Date()
+    console.log('before: ', date.toISOString())
+    const hourOffset = parseInt(timezoneOffset.slice(0, 3))
+    const minuteOffset = parseInt(timezoneOffset.slice(3)) * (hourOffset < 0 ? -1 : 1)
+
+    date.setUTCHours(date.getUTCHours() + hourOffset)
+    date.setUTCMinutes(date.getUTCMinutes() + minuteOffset)
+
+    console.log('after: ', date.toISOString())
+    return date.toISOString().slice(0, 10)
   }
 }
 

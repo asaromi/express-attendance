@@ -34,8 +34,9 @@ const postAttendance = async (req, res) => {
       throw error
     }
 
+    const date = attendanceService.todayDate(location.utc_offset)
     const attendance = await attendanceService.storeAttendance({
-      date: new Date().toISOString().slice(0, 10),
+      date,
       type,
       user_id,
       ip_address,
