@@ -22,26 +22,13 @@ const postAttendance = async (req, res) => {
 
     if (!ip_address) return errorResponse({ res, message: 'IP address is required', statusCode: 400 })
 
-    const {
-      latitude,
-      longitude,
-      city,
-      region,
-      country_name,
-      country_code,
-    } = await getLocation(ip_address)
-
+    const location = await getLocation(ip_address)
     const attendance = await attendanceService.storeAttendance({
       date: new Date().toISOString().slice(0, 10),
       type,
       user_id,
       ip_address,
-      location: {
-        latitude,
-        longitude,
-        address: `${city}, ${region}, ${country_name}`,
-        country_code,
-      }
+      location
     })
 
     return successResponse({ res, result: attendance })
